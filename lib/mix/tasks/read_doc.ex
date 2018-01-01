@@ -12,14 +12,23 @@ defmodule Mix.Tasks.ReadDoc do
   E.g. if a file (typically `README.md` contains the following content:
 
         Preface
-        <!-- begin doc: module My.Module -->
+        <!-- begin @doc: My.Module -->
            Some text
-        <!-- end doc: module My.Module -->
+        <!-- end @doc: My.Module -->
         Epilogue
 
 
   running the `read_doc` task with `README.md`, will replace `Some text`
   with the moduledoc string of `My.Module`.
+
+  Also if the name designates a function, the docsring of the given function
+  will be replaced, e.g.
+
+        <!-- begin @doc: My.Module.shiny_fun -->
+          ...
+        <!-- end @doc: My.Module.shiny_fun -->
+
+
   """
   
   use Mix.Task
