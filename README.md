@@ -2,6 +2,10 @@
 
 **TODO: Add description**
 
+## Example for included moduledoc
+
+<!-- insert @doc ReadDoc.Options --> 
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed

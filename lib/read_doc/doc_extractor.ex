@@ -7,6 +7,13 @@ defmodule ReadDoc.DocExtractor do
   Extracts the moduledoc or doc of a function from a module
   """
   def extract_doc(module_or_function_name) do
+
+    module_or_function_name
+    |> extract_untrimmed_doc()
+    |> trim_trailing()
+  end
+
+  defp extract_untrimmed_doc(module_or_function_name) do
     case split_name(module_or_function_name) do
       [function_name, module_name] -> _extract_doc(function_name, module_name) 
       [""]                         -> raise ArgumentError, "no module name provided"
@@ -59,4 +66,7 @@ defmodule ReadDoc.DocExtractor do
       |> String.split(".", parts: 2)
       |> Enum.map(&String.reverse/1)
   end
+
+  defp trim_trailing(nil), do: nil
+  defp trim_trailing(str), do: str |> String.trim_trailing()
 end

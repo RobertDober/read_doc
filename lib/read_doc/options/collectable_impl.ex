@@ -1,6 +1,6 @@
-defmodule Fq.Options.CollectableImpl do
+defmodule ReadDoc.Options.CollectableImpl do
   
-  defimpl Collectable, for: Fq.Options do
+  defimpl Collectable, for: ReadDoc.Options do
     def into acc do 
       collector = fn
         strct, {:cont, {kw, value}} -> %{strct | kw => value}

@@ -5,9 +5,7 @@ defmodule ReadDoc.DocExtractorTest do
   
   describe "Moduledoc" do 
     test "moduledoc" do 
-      assert E.extract_doc("Support.Example") == """
-  modduledoc for example
-  """
+      assert E.extract_doc("Support.Example") == "modduledoc for example"
     end
 
     test "no moduledoc" do
@@ -21,9 +19,7 @@ defmodule ReadDoc.DocExtractorTest do
 
   describe "Functiondoc" do
     test "exists" do
-      assert E.extract_doc("Support.Example.a_function") == """
-  A function doc
-  """
+      assert E.extract_doc("Support.Example.a_function") == "A function doc"
     end
 
     test "does (probably) not exist" do

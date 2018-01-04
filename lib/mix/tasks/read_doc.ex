@@ -1,4 +1,8 @@
 defmodule Mix.Tasks.ReadDoc do
+  alias ReadDoc.Options
+
+  import ReadDoc.FileSaver, only: [maybe_backup_files: 1]
+
   @shortdoc """
   Extract ex_doc documentation from modules or functions into a file.
   """
@@ -27,13 +31,37 @@ defmodule Mix.Tasks.ReadDoc do
         <!-- begin @doc: My.Module.shiny_fun -->
           ...
         <!-- end @doc: My.Module.shiny_fun -->
-
-
   """
   
   use Mix.Task
 
   def run(args) do
-    IO.inspect args
+    parse_args(args)
+    |> make_options()
+    |> maybe_backup_files()
+    |> ReadDoc.rewrite_files() 
   end
+
+
+  defp make_options({options, files, []}) do
+    { options
+        |> Enum.into(%Options{}),
+        files }
+  end
+  defp make_options({_, _, errors}) do
+    raise ArgumentError, "undefined switches #{readable_options(errors, [])}"
+  end
+
+  defp readable_options([], result), do: result |> Enum.reverse() |> Enum.join(", ")
+  defp readable_options([{option, value}|rest], result) do
+    readable_options(rest, [ "#{option} #{value}" |> String.trim() | result ])
+  end
+
+  defp parse_args(args) do 
+    OptionParser.parse(args, switches: switches(), aliases: aliases())
+  end
+
+  defp switches, do: [keep_copy: :boolean, start_comment: :string, end_comment: :string, line_comment: :string]
+  defp aliases,  do: [k: :keep_copy]
+
 end
