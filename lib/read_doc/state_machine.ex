@@ -1,6 +1,8 @@
 defmodule ReadDoc.StateMachine do
   alias ReadDoc.Options
   import ReadDoc.DocExtractor, only: [extract_doc: 1]
+  import ReadDoc.Enum, only: [map_reverse: 2]
+  import ReadDoc.Pair, only: [first: 1]
 
   defstruct state: :copy,
             opendoc: %{for: nil, line_nb: 0},
@@ -16,7 +18,7 @@ defmodule ReadDoc.StateMachine do
   @copy_state %{state: :copy}
   @doc false
   defp state_machine(lines, result, state)
-  defp state_machine([], result, @copy_state), do: result |> Enum.reverse()
+  defp state_machine([], result, @copy_state), do: result |> map_reverse(&first/1)
   defp state_machine([], result, state) do
     if !state.options.silent do
       IO.puts :stderr, "end @doc for #{format_opendoc(state)} missing"
@@ -25,38 +27,34 @@ defmodule ReadDoc.StateMachine do
       nil -> result
       doc -> add_doc(doc, result)
     end
-    |> Enum.reverse()
+    |> map_reverse(&first/1)
   end
   defp state_machine([line|rest], result, state = @copy_state) do
     case begin_doc_match(line, state) do 
       nil          -> substate_inside_copy(line, rest, result, state)
-      [_, opendoc] -> state_machine(rest, push(line, result), %{state | opendoc: %{for: opendoc, line_nb: 0}})
+      [_, opendoc] -> state_machine(rest, push(line, result), %{state | state: :remove_old, opendoc: %{for: opendoc, line_nb: next_lnb(result)}})
     end
   end
-  defp state_machine([line|rest], :remove_old, opendoc, result, options) do
-    case end_doc_match(line, options) do
-      nil -> substate_inside_remove(line, rest, opendoc, result, options)
-      [_, ^opendoc] -> substate_replace_doc(line, rest, opendoc, result, options)
-      [_, opendoc_prime] -> substate_ignore_illegal_close(rest, opendoc, opendoc_prime, result, options)
+  defp state_machine([line|rest], result, state=%{state: :remove_old, opendoc: %{for: opendoc}}) do
+    case end_doc_match(line, state) do
+      nil -> substate_inside_remove(line, rest, opendoc, result, state)
+      [_, ^opendoc] -> substate_replace_doc(line, rest, opendoc, result, state)
+      [_, opendoc_prime] -> substate_ignore_illegal_close(rest, opendoc, opendoc_prime, result, state)
     end
   end
 
-  defp substate_ignore_illegal_close(rest, opendoc, opendoc_prime, result, options) do 
-    if !options.silent do 
+  defp substate_ignore_illegal_close(rest, opendoc, opendoc_prime, result, state) do 
+    if !state.options.silent do 
       IO.puts :stderr, "ignoring end @doc of #{opendoc_prime} as we are inside a @doc block for #{opendoc}"
     end
-    state_machine(rest, :remove_old, opendoc, result, options)
+    state_machine(rest, result, state)
   end
 
-  defp substate_ignore_illegal_open(line, rest, opendoc, opendoc_prime, result, options) do 
-    if !options.silent do
+  defp substate_ignore_illegal_open(line, rest, opendoc, opendoc_prime, result, state) do 
+    if !state.options.silent do
       IO.puts :stderr, "ignoring begin @doc of #{opendoc_prime} as we are inside a @doc block for #{opendoc}"
     end
-    if options.fix_errors do
-      state_machine(rest, :remove_old, opendoc, result, options)
-    else
-      state_machine(rest, :remove_old, opendoc, push(line, result), options)
-    end
+    state_machine(rest, push(line, result), state)
   end
 
   defp substate_illegal_close_in_copy(line, rest, closedoc, result, state) do 
@@ -78,17 +76,17 @@ defmodule ReadDoc.StateMachine do
     
   end
 
-  defp substate_inside_remove(line, rest, opendoc, result, options) do 
-    case begin_doc_match(line, options) do 
-      nil -> state_machine(rest, :remove_old, opendoc, result, options)
-      [_, opendoc_prime] -> substate_ignore_illegal_open(line, rest, opendoc, opendoc_prime, result, options)
+  defp substate_inside_remove(line, rest, opendoc, result, state) do 
+    case begin_doc_match(line, state) do 
+      nil -> state_machine(rest, result, state)
+      [_, opendoc_prime] -> substate_ignore_illegal_open(line, rest, opendoc, opendoc_prime, result, state)
     end
   end
 
-  defp substate_replace_doc(line, rest, opendoc, result, options) do 
-    case extract_doc_with_warning(opendoc, options) do
-      nil -> state_machine(rest, :copy, nil, push(line, result), options)
-      doc -> state_machine(rest, :copy, nil, push(line, add_doc(doc, result)), options)
+  defp substate_replace_doc(line, rest, opendoc, result, state) do 
+    case extract_doc_with_warning(state) do
+      nil -> state_machine(rest, push(line, result), %{state | state: :copy})
+      doc -> state_machine(rest, push(line, add_doc(doc, result)), %{state | state: :copy})
     end
   end
 
@@ -108,7 +106,7 @@ defmodule ReadDoc.StateMachine do
   end
 
   defp begin_doc_match({line, _}, state) do
-    Regex.run state.options.begin_rgx, line
+    Regex.run( state.options.begin_rgx, line )
   end
 
   defp end_doc_match({line, _}, state) do
@@ -127,9 +125,12 @@ defmodule ReadDoc.StateMachine do
   end
 
   defp format_opendoc(state) do 
-    "#{state.opendoc.for}:#{state.opendoc.line_nb}"
+    "#{state.opendoc.for} (opened in line #{state.opendoc.line_nb})"
   end
 
-  defp push(line, []), do: [{line, 1}]
-  defp push(line, [{_, lnb}|_] = result), do: [{line, lnb+1} | result]
+  defp next_lnb([]), do: 1
+  defp next_lnb([{_, lnb}|_]), do: lnb + 1
+
+  defp push({line, _}, []), do: [{line, 1}]
+  defp push({line, _}, [{_, lnb}|_] = result), do: [{line, lnb+1} | result]
 end
