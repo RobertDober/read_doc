@@ -8,6 +8,8 @@ defmodule ReadDoc.Mixfile do
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
       elixirc_paths: elixirc_paths(Mix.env),
+      package: package(),
+     test_coverage: [tool: ExCoveralls],
       deps: deps()
     ]
   end
@@ -25,9 +27,24 @@ defmodule ReadDoc.Mixfile do
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       {:ex_doc, "~> 0.18"},
+      {:excoveralls, "~> 0.8.0", only: :test},
     ]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test_support"]
   defp elixirc_paths(_),     do: ["lib"]
+
+  defp package do
+    [
+      files:       [ "lib", "mix.exs", "README.md", "LICENSE" ],
+      maintainers: [
+                     "Robert Dober <robert.dober@gmail.com>"
+                   ],
+      licenses:    [ "Apache 2 (see the file LICENSE)" ],
+      links:       %{
+                       "GitHub" => "https://github.com/RobertDober/read_doc",
+                   }
+    ]
+  end
+
 end
