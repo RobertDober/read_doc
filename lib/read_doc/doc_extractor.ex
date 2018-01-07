@@ -7,7 +7,6 @@ defmodule ReadDoc.DocExtractor do
   Extracts the moduledoc or doc of a function from a module
   """
   def extract_doc(module_or_function_name) do
-
     module_or_function_name
     |> extract_untrimmed_doc()
     |> trim_trailing()
