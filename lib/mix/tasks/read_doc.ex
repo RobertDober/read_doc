@@ -4,7 +4,7 @@ defmodule Mix.Tasks.ReadDoc do
   import ReadDoc.FileSaver, only: [maybe_backup_files: 1]
 
   @shortdoc """
-  Extract ex_doc documentation from modules or functions into a file.
+  Extract ex_doc documentation from modules or functions into a file
   """
 
   @moduledoc """

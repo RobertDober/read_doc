@@ -10,6 +10,7 @@ defmodule ReadDoc.Mixfile do
       elixirc_paths: elixirc_paths(Mix.env),
       package: package(),
       test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [coveralls: :test],
       deps: deps()
     ]
   end
