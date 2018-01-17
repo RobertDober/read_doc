@@ -15,7 +15,7 @@ defmodule ReadDoc.FileSaver do
   def maybe_backup_files( params = {options, files}) do 
     if options.keep_copy do
       files |> Enum.each(fn file ->
-        backup_file file, options.keep_copy
+        backup_file file, options
       end)
     end
     params
@@ -30,8 +30,14 @@ defmodule ReadDoc.FileSaver do
     |> hd()
   end
 
-  @spec backup_file( String.t, any ) :: non_neg_integer() | no_return()
-  defp backup_file file, _copy_method do 
-    File.copy!(file, next_bup(file))
+  @spec backup_file( String.t, Options.t ) :: non_neg_integer() | no_return()
+  defp backup_file file, options do 
+    with bup_name <- next_bup(file) do
+      if !options.silent do
+        IO.puts( :stderr, "backing up file #{file} -> #{bup_name}")
+      end
+      File.copy!(file, bup_name)
+    end
+    
   end
 end

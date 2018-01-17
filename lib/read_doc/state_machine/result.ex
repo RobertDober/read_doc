@@ -35,7 +35,7 @@ defmodule ReadDoc.StateMachine.Result do
   def add_numbered_line_unless( result, {line, _}, false ) do
     add_line(result, line)
   end
-  def add_numbered_line_unless( result, {line, _}, true ) do
+  def add_numbered_line_unless( result, _, true ) do
     result
   end
 

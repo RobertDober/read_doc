@@ -8,6 +8,6 @@ defmodule Support.Helpers do
 
   def run! input, options \\ [] do
     options = Map.merge(%Options{}, options |> Enum.into(%{}))
-    ReadDoc.StateMachine.run!(input, Options.finalize(options))
+    ReadDoc.StateMachine.run!(input, Options.finalize(options), "filename")
   end
 end

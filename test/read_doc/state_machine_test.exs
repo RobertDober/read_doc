@@ -23,13 +23,6 @@ defmodule ReadDoc.StateMachineTest do
       assert run(@only_end, fix_errors: false) == {@only_end, [%ReadDoc.Message{lnb: 1, message: "ignoring end @doc of X (opened in line 1) as we are not inside a @doc block", severity: :warning}]}
     end
 
-    test "because no begin trigger - silent and autocorrect" do
-      assert run(@only_end, silent: true) == {["line 1"], []}
-    end
-
-    test "because no begin trigger - silent and no autocorrect" do
-      assert run(@only_end, fix_errors: false, silent: true) == {@only_end, []}
-    end
   end
 
   describe "state machine, insert one doc, no warnings" do
@@ -152,6 +145,7 @@ defmodule ReadDoc.StateMachineTest do
       ],
       [%ReadDoc.Message{lnb: 2, message: "ignoring end @doc of Main.alpha (opened in line 2) as we are inside a @doc block for Main (opened in line 1)", severity: :warning}]}
     end
+
 
     @many_warns [ "<!-- begin @doc Main -->",
       "<!-- begin @doc Main.alpha -->",

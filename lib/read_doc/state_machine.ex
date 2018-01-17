@@ -11,11 +11,12 @@ defmodule ReadDoc.StateMachine do
 
   @type result_t() :: Result.result_tuple()
 
-  @spec run!( list(String.t), Options.t ) :: list(String.t)
-  def run!(lines, options) do
+  @spec run!( list(String.t), Options.t, String.t ) :: list(String.t)
+  def run!(lines, options, file) do
     with {output, messages} <- run(lines, options) do
-      messages
-        |> Enum.each(&Message.emit_message/1)
+      if !options.silent do
+        Message.emit_messages(messages, file)
+      end
       output
     end
   end
@@ -62,34 +63,22 @@ defmodule ReadDoc.StateMachine do
   @spec substate_ignore_illegal_close( numbered_lines(), String.t, Result.t, State.t ) :: result_t
   defp substate_ignore_illegal_close(rest, opendoc_prime, result, state) do 
     result_prime =
-      if !state.options.silent do 
-        Result.add_warning(result, "ignoring end @doc of #{State.format_opendoc(opendoc_prime, Result.next_lnb(result))} as we are inside a @doc block for #{State.format_opendoc state}")
-      else
-        result
-      end
+      Result.add_warning(result, "ignoring end @doc of #{State.format_opendoc(opendoc_prime, Result.next_lnb(result))} as we are inside a @doc block for #{State.format_opendoc state}")
     state_machine(rest, result_prime, state)
   end
 
   @spec substate_ignore_illegal_open( numbered_line(), numbered_lines(), String.t, Result.t, State.t ) :: result_t()
   defp substate_ignore_illegal_open(line, rest, opendoc_prime, result, state) do 
     result_prime =
-      if !state.options.silent do
-        Result.add_warning(result, "ignoring begin @doc of #{State.format_opendoc(opendoc_prime, Result.next_lnb(result))} as we are inside a @doc block for #{State.format_opendoc state}")
-      else
-        result
-      end
+      Result.add_warning(result, "ignoring begin @doc of #{State.format_opendoc(opendoc_prime, Result.next_lnb(result))} as we are inside a @doc block for #{State.format_opendoc state}")
     state_machine(rest, Result.add_numbered_line(result_prime, line), state)
   end
 
   # CHECK
   @spec substate_illegal_close_in_copy( numbered_line(), numbered_lines(), String.t, Result.t, State.t ) :: result_t()
-  defp substate_illegal_close_in_copy(line, rest, closedoc, result, state=%{options: %{silent: silent, fix_errors: fix_errors}}) do 
+  defp substate_illegal_close_in_copy(line, rest, closedoc, result, state=%{options: %{fix_errors: fix_errors}}) do 
     result_prime =
-      if !silent do
-        Result.add_warning(result, "ignoring end @doc of #{State.format_opendoc(closedoc, Result.next_lnb(result))} as we are not inside a @doc block" )
-      else
-        result
-      end
+      Result.add_warning(result, "ignoring end @doc of #{State.format_opendoc(closedoc, Result.next_lnb(result))} as we are not inside a @doc block" )
     state_machine(rest, Result.add_numbered_line_unless(result_prime, line, fix_errors), state)
   end
 

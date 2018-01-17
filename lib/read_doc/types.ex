@@ -1,5 +1,5 @@
 defmodule ReadDoc.Types do
-  defmacro __using__( options \\ [] ) do
+  defmacro __using__( _options \\ [] ) do
     quote do
       @type list_or_unit(t) :: t | list(t)
 

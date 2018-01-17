@@ -35,11 +35,12 @@ defmodule Mix.Tasks.ReadDoc do
   
   use Mix.Task
 
+  @spec run( list(String.t) ) :: :ok
   def run(args) do
     parse_args(args)
-    |> make_options()
-    |> maybe_backup_files()
-    |> ReadDoc.rewrite_files() 
+      |> make_options()
+      |> maybe_backup_files()
+      |> ReadDoc.rewrite_files() 
   end
 
 
@@ -58,7 +59,7 @@ defmodule Mix.Tasks.ReadDoc do
   end
 
   defp parse_args(args) do 
-    OptionParser.parse(args, switches: switches(), aliases: aliases())
+    OptionParser.parse(args, strict: switches(), aliases: aliases())
   end
 
   defp switches, do: [keep_copy: :boolean, start_comment: :string, end_comment: :string, line_comment: :string]
