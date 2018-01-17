@@ -20,4 +20,5 @@ otp_release:
 env:
   - MIX_ENV=test
 
+install: chmod 444  test_support/READONLY.md
 script: mix coveralls.travis
