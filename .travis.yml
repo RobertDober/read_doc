@@ -24,4 +24,5 @@ install:
   - chmod 444  test_support/READONLY.md
   - mix local.hex --force
   - mix deps.get
+  - mix local.rebar --force
 script: mix coveralls.travis
