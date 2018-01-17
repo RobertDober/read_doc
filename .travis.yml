@@ -21,7 +21,7 @@ env:
   - MIX_ENV=test
 
 install: 
+  - chmod 444  test_support/READONLY.md
   - mix local.hex --force
   - mix deps.get
-  - chmod 444  test_support/READONLY.md
 script: mix coveralls.travis
