@@ -22,5 +22,6 @@ env:
 
 install: 
   - mix local.hex --force
+  - mix deps.get
   - chmod 444  test_support/READONLY.md
 script: mix coveralls.travis
