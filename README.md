@@ -22,8 +22,31 @@ end
 
 ## Usage
 
-<!-- begin @doc Mix.Task.ReadDoc -->
-<!-- end @doc Mix.Task.ReadDoc -->
+<!-- begin @doc Tasks.ReadDoc -->
+The documentation to be extracted and its location in the target file
+are indicated by two lines, a start line and an end line which act as
+parentheses that are kept, the lines between them are replaced by the
+doc strings defined by the start and end line's content.
+
+E.g. if a file (typically `README.md`) contains the following content:
+
+      Preface
+      <!-- begin @doc: My.Module -->
+         Some text
+      <!-- end @doc: My.Module -->
+      Epilogue
+
+
+running the `read_doc` task with `README.md`, will replace `Some text`
+with the moduledoc string of `My.Module`.
+
+Also if the name designates a function, the docsring of the given function
+will be replaced, e.g.
+
+      <!-- begin @doc: My.Module.shiny_fun -->
+        ...
+      <!-- end @doc: My.Module.shiny_fun -->
+<!-- end @doc Tasks.ReadDoc -->
 
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
