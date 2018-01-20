@@ -41,6 +41,7 @@ defmodule ReadDoc.DocExtractor do
 
   @spec extract_module_doc( atom ) :: string?
   defp extract_module_doc(module) do
+    Code.ensure_loaded(module) #|> IO.inspect()
     case Code.get_docs(module, :moduledoc) do
       {_, docs} when is_binary(docs) ->
         docs

@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.ReadDoc do
+defmodule Tasks.ReadDoc do
   alias ReadDoc.Options
 
   import ReadDoc.FileSaver, only: [maybe_backup_files: 1]
@@ -13,7 +13,7 @@ defmodule Mix.Tasks.ReadDoc do
   parentheses that are kept, the lines between them are replaced by the
   doc strings defined by the start and end line's content.
   
-  E.g. if a file (typically `README.md` contains the following content:
+  E.g. if a file (typically `README.md`) contains the following content:
 
         Preface
         <!-- begin @doc: My.Module -->
@@ -33,8 +33,6 @@ defmodule Mix.Tasks.ReadDoc do
         <!-- end @doc: My.Module.shiny_fun -->
   """
   
-  use Mix.Task
-
   @spec run( list(String.t) ) :: :ok
   def run(args) do
     parse_args(args)

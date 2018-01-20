@@ -4,6 +4,7 @@
 [![Hex.pm](https://img.shields.io/hexpm/v/read_doc.svg)](https://hex.pm/packages/read_doc)
 [![Coverage Status](https://coveralls.io/repos/github/RobertDober/read_doc/badge.svg?branch=master)](https://coveralls.io/github/RobertDober/read_doc?branch=master)
 [![Inline docs](http://inch-ci.org/github/RobertDober/read_doc.svg?branch=master)](http://inch-ci.org/github/RobertDober/read_doc)
+
 Insert ExDoc documentation into files.
 
 ## Installation
@@ -18,6 +19,12 @@ def deps do
   ]
 end
 ```
+
+## Usage
+
+<!-- begin @doc Mix.Task.ReadDoc -->
+<!-- end @doc Mix.Task.ReadDoc -->
+
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can

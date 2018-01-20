@@ -29,13 +29,19 @@ defmodule ReadDoc.StateMachine do
       |> state_machine(%Result{}, %State{options: options})
   end
 
-  @copy_state %{state: :copy}
-
-  @doc false
   @spec state_machine( numbered_lines(), Result.t, State.t ) :: result_t()
-  defp state_machine(lines, result, state)
-  defp state_machine([], result, @copy_state), do: Result.finalize( result )
-  defp state_machine([], result, state) do
+  defp state_machine([], result, state), do: _state_machine([], result, state)
+  defp state_machine(lines =[_l|_], result, state) do
+    # IO.inspect({state.opendoc[:for], l})
+    _state_machine(lines, result, state)
+  end
+
+
+  @copy_state %{state: :copy}
+  @spec _state_machine( numbered_lines(), Result.t, State.t ) :: result_t()
+  defp _state_machine(lines, result, state)
+  defp _state_machine([], result, @copy_state), do: Result.finalize( result )
+  defp _state_machine([], result, state) do
     result_prime =
       Result.add_warning(result, "end @doc for #{State.format_opendoc(state)} missing", State.opened_at(state))
     case extract_doc(State.current_open(state)) do
@@ -44,7 +50,7 @@ defmodule ReadDoc.StateMachine do
     end
     |> Result.finalize()
   end
-  defp state_machine([line|rest], result, state = @copy_state) do
+  defp _state_machine([line|rest], result, state = @copy_state) do
     case begin_doc_match(line, state) do 
       nil          -> substate_inside_copy(line, rest, result, state)
       [_, opendoc] -> state_machine( rest,
@@ -52,7 +58,7 @@ defmodule ReadDoc.StateMachine do
                                      State.open(state, opendoc, result) )
     end
   end
-  defp state_machine([line|rest], result, state=%{state: :remove_old, opendoc: %{for: opendoc}}) do
+  defp _state_machine([line|rest], result, state=%{state: :remove_old, opendoc: %{for: opendoc}}) do
     case end_doc_match(line, state) do
       nil                -> substate_inside_remove(line, rest, result, state)
       [_, ^opendoc]      -> substate_replace_doc(line, rest, result, state)
@@ -104,7 +110,7 @@ defmodule ReadDoc.StateMachine do
     copy_state = %{state | state: :copy}
     case extract_doc(for) do
       nil -> state_machine( rest,
-               Result.add_warning(result, "end @doc missing for #{State.format_opendoc(state)}")
+               Result.add_warning(result, "doc not found for #{State.format_opendoc(state)}")
                |> Result.add_numbered_line(line), copy_state)
       doc -> state_machine(rest, add_docs_with_line(result, doc, line), copy_state)
     end

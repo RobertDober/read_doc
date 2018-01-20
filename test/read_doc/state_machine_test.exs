@@ -180,7 +180,7 @@ defmodule ReadDoc.StateMachineTest do
           "<!-- end @doc Main.Second.yes_doc --> ",
           "suffix"
         ],
-      [%ReadDoc.Message{lnb: 12, message: "end @doc missing for DoesNotExist (opened in line 11)", severity: :warning},
+      [%ReadDoc.Message{lnb: 12, message: "doc not found for DoesNotExist (opened in line 11)", severity: :warning},
        %ReadDoc.Message{lnb: 2, message: "ignoring begin @doc of Main.alpha (opened in line 2) as we are inside a @doc block for Main (opened in line 1)", severity: :warning}]}
     end
   end

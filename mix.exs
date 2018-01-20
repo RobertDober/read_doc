@@ -11,6 +11,7 @@ defmodule ReadDoc.Mixfile do
       package: package(),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: ["coveralls": :test, "coveralls.html": :test],
+      aliases: [read_doc: &read_doc/1],
       deps: deps()
     ]
   end
@@ -38,7 +39,7 @@ defmodule ReadDoc.Mixfile do
 
   defp package do
     [
-      files:       [ "lib", "mix.exs", "README.md", "LICENSE" ],
+      files:       [ "lib", "mix.exs", "README.md", "LICENSE", "tasks" ],
       maintainers: [
                      "Robert Dober <robert.dober@gmail.com>"
                    ],
@@ -49,4 +50,8 @@ defmodule ReadDoc.Mixfile do
     ]
   end
 
+  defp read_doc(args) do
+    Code.load_file "tasks/read_doc.exs"
+    Mix.Tasks.ReadDoc.run(args)
+  end
 end
