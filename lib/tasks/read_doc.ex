@@ -3,10 +3,6 @@ defmodule Tasks.ReadDoc do
 
   import ReadDoc.FileSaver, only: [maybe_backup_files: 1]
 
-  @shortdoc """
-  Extract ex_doc documentation from modules or functions into a file
-  """
-
   @moduledoc """
   ## Abstract
 
@@ -49,6 +45,10 @@ defmodule Tasks.ReadDoc do
 
   """
 
+  @doc """
+  This is the implementation interface of the task, it supports the following options:
+
+  """
   @spec run( list(String.t) ) :: :ok
   def run(args) do
     parse_args(args)
