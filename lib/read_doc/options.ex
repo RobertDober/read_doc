@@ -25,4 +25,8 @@ defmodule ReadDoc.Options do
        end_rgx: Regex.compile!(options.end_trigger, "x") }
   end
 
+  @spec croak( t, String.t ) :: :ok
+  def croak( %__MODULE__{silent: true}, _ ), do: :ok
+  def croak( %__MODULE__{silent: false}, message ), do:
+    IO.puts :stderr, message
 end

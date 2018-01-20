@@ -33,9 +33,7 @@ defmodule ReadDoc.FileSaver do
   @spec backup_file( String.t, Options.t ) :: non_neg_integer() | no_return()
   defp backup_file file, options do 
     with bup_name <- next_bup(file) do
-      if !options.silent do
-        IO.puts( :stderr, "backing up file #{file} -> #{bup_name}")
-      end
+      Options.croak options, "backing up file #{file} -> #{bup_name}"
       File.copy!(file, bup_name)
     end
     
