@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/RobertDober/read_doc.svg?branch=master)](https://travis-ci.org/RobertDober/read_doc)
 [![Hex.pm](https://img.shields.io/hexpm/v/read_doc.svg)](https://hex.pm/packages/read_doc)
-[![Coverage Status](https://coveralls.io/repos/github/RobertDober/read_doc/badge.svg?branch=master)](https://coveralls.io/github/RobertDober/read_doc?branch=master)
+[![Coverage Status](https://coveralls.io/repos/RobertDober/read_doc/badge.png)](https://coveralls.io/r/RobertDober/read_doc)
 [![Inline docs](http://inch-ci.org/github/RobertDober/read_doc.svg?branch=master)](http://inch-ci.org/github/RobertDober/read_doc)
 
 Insert ExDoc documentation into files.
