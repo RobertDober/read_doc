@@ -38,7 +38,7 @@ defmodule Tasks.ReadDoc do
   with the moduledoc string of `My.Module`.
 
   ## Limitations
-  
+
   - Docstrings for types, macros and callbacks cannot be accessed yet.
   - Recursion is not supported, meaning that a docstring containing markers
     will not trigger the inclusion of the docstring indicated by these markers.
@@ -50,40 +50,52 @@ defmodule Tasks.ReadDoc do
   This is the implementation interface of the task, it supports the following options:
 
   """
-  @spec run( list(String.t) ) :: :ok
+  @spec run(list(String.t())) :: :ok
   def run(args) do
     case parse_args(args) |> make_options() do
-      {:ok, options_and_files} -> options_and_files
+      {:ok, options_and_files} ->
+        options_and_files
         |> maybe_backup_files()
         |> ReadDoc.rewrite_files()
-      _ -> :ok
+
+      _ ->
+        :ok
     end
   end
 
-
   defp make_options({[help: true], _, _}) do
-    IO.puts :stderr, extract_doc("ReadDoc.Options")
+    IO.puts(:stderr, extract_doc("ReadDoc.Options"))
     {:exit, nil}
   end
+
   defp make_options({options, files, []}) do
-    {:ok, { options
-        |> Enum.into(%Options{}),
-        files }}
+    {:ok,
+     {options
+      |> Enum.into(%Options{}), files}}
   end
+
   defp make_options({_, _, errors}) do
     raise ArgumentError, "undefined switches #{readable_options(errors, [])}"
   end
 
   defp readable_options([], result), do: result |> Enum.reverse() |> Enum.join(", ")
-  defp readable_options([{option, value}|rest], result) do
-    readable_options(rest, [ "#{option} #{value}" |> String.trim() | result ])
+
+  defp readable_options([{option, value} | rest], result) do
+    readable_options(rest, ["#{option} #{value}" |> String.trim() | result])
   end
 
   defp parse_args(args) do
     OptionParser.parse(args, strict: switches(), aliases: aliases())
   end
 
-  defp switches, do: [keep_copy: :boolean, start_comment: :string, end_comment: :string, line_comment: :string, help: :boolean]
-  defp aliases,  do: [k: :keep_copy, h: :help]
+  defp switches,
+    do: [
+      keep_copy: :boolean,
+      start_comment: :string,
+      end_comment: :string,
+      line_comment: :string,
+      help: :boolean
+    ]
 
+  defp aliases, do: [k: :keep_copy, h: :help]
 end

@@ -1,11 +1,10 @@
 defmodule Main do
-
   @moduledoc """
     This is Main
     This is Main
     This is Main
   """
-  
+
   @doc """
     This is Main.alpha
   """
