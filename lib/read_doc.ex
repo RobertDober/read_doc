@@ -17,8 +17,16 @@ defmodule ReadDoc do
   end
 
   @spec rewrite_file( String.t, Options.t ) :: :ok
-  defp rewrite_file(file, options) do 
-    File.read!(file)
+  defp rewrite_file(file, options) do
+    case File.read(file) do
+      {:ok, content} -> rewrite_existing_file(file, content, options)
+      {:error, reason} -> Options.croak options, "#{file}: #{:file.format_error(reason)}"
+    end
+  end
+
+  @spec rewrite_existing_file( String.t, String.t, Options.t ) :: :ok
+  defp rewrite_existing_file(file, content, options) do
+    content
       |> String.split("\n")
       |> run!(options, file)
       |> Enum.join("\n")
@@ -31,10 +39,9 @@ defmodule ReadDoc do
 
 
   @spec file_written_message( :ok | {:error, File.posix()}, String.t, Options.t ) :: :ok
-  defp file_written_message(_, _, %{silent: true}), do: :ok
-  defp file_written_message(:ok, file, _), do:
-    IO.puts :stderr, "#{file} updated"
-  defp file_written_message({:error, reason}, file, _), do: 
-    IO.puts :stderr, "#{file}: #{:file.format_error(reason)}"
+  defp file_written_message(:ok, file, options), do:
+    Options.croak options, "#{file} updated"
+  defp file_written_message({:error, reason}, file, options), do: 
+    Options.croak options, "#{file}: #{:file.format_error(reason)}"
 
 end

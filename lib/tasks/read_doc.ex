@@ -3,16 +3,23 @@ defmodule Tasks.ReadDoc do
 
   import ReadDoc.FileSaver, only: [maybe_backup_files: 1]
 
-  @shortdoc """
-  Extract ex_doc documentation from modules or functions into a file
-  """
-
   @moduledoc """
-  The documentation to be extracted and its location in the target file
-  are indicated by two lines, a start line and an end line which act as
-  parentheses that are kept, the lines between them are replaced by the
-  doc strings defined by the start and end line's content.
-  
+  ## Abstract
+
+  Documentation of your project can be extracted into files containing
+  markers.
+
+  These markers are a marker to start insertion, which is of the form:
+
+      <!-- begin @doc <ElixirIdentifier> -->
+
+  and
+
+      <!-- end @doc <ElixirIdentifier> -->
+
+  Right now only `@moduledoc`  and `@doc` strings can be extracted, according to
+  if `<ElixirIdentifier>` refers to a module or a function.
+
   E.g. if a file (typically `README.md`) contains the following content:
 
         Preface
@@ -22,23 +29,32 @@ defmodule Tasks.ReadDoc do
         Epilogue
 
 
-  running the `read_doc` task with `README.md`, will replace `Some text`
+  running
+
+        mix read_doc README.md
+
+  will replace `Some text`
   with the moduledoc string of `My.Module`.
 
-  Also if the name designates a function, the docsring of the given function
-  will be replaced, e.g.
-
-        <!-- begin @doc: My.Module.shiny_fun -->
-          ...
-        <!-- end @doc: My.Module.shiny_fun -->
-  """
+  ## Limitations
   
+  - Docstrings for types, macros and callbacks cannot be accessed yet.
+  - Recursion is not supported, meaning that a docstring containing markers
+    will not trigger the inclusion of the docstring indicated by these markers.
+
+
+  """
+
+  @doc """
+  This is the implementation interface of the task, it supports the following options:
+
+  """
   @spec run( list(String.t) ) :: :ok
   def run(args) do
     parse_args(args)
       |> make_options()
       |> maybe_backup_files()
-      |> ReadDoc.rewrite_files() 
+      |> ReadDoc.rewrite_files()
   end
 
 
@@ -56,7 +72,7 @@ defmodule Tasks.ReadDoc do
     readable_options(rest, [ "#{option} #{value}" |> String.trim() | result ])
   end
 
-  defp parse_args(args) do 
+  defp parse_args(args) do
     OptionParser.parse(args, strict: switches(), aliases: aliases())
   end
 

@@ -10,6 +10,12 @@ defmodule ReadDocTest do
     end) == "test_support/READONLY.md: permission denied\n"
   end
 
+  test "try to rewrite a non existing file" do
+    assert capture_io( :stderr, fn ->
+      ReadDoc.rewrite_files({%Options{}, ~w{HowCouldYouImagineSuchAFileEverExisted?????}})
+    end) == "HowCouldYouImagineSuchAFileEverExisted?????: no such file or directory\n"
+  end
+
   test "rewrite emits warnings" do 
     assert capture_io( :stderr, fn ->
       ReadDoc.rewrite_files({%Options{}, ~w{test_support/MISSING_END.md}})
