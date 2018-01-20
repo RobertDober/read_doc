@@ -26,13 +26,15 @@ end
 Documentation of your project can be extracted into files containing
 markers.
 
-These markers are a marker to start insertion, which is of the form:
+These markers are
 
     <!-- begin @doc <ElixirIdentifier> -->
 
-and
+to mark the start of an inserted docstriang and
 
     <!-- end @doc <ElixirIdentifier> -->
+
+to mark the end thereof.
 
 Right now only `@moduledoc`  and `@doc` strings can be extracted, according to
 if `<ElixirIdentifier>` refers to a module or a function.
@@ -84,7 +86,17 @@ The following options are implemented
                     the first capture defines the module/function of the docstring
 <!-- end @doc ReadDoc.Options -->
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/read_doc](https://hexdocs.pm/read_doc).
+Docs at [https://hexdocs.pm/read_doc](https://hexdocs.pm/read_doc).
 
+
+
+## Author
+
+Copyright © 2018 Dave Thomas, The Pragmatic Programmers
+@/+pragdave,  dave@pragprog.com
+
+Robert Dober, robert.dober@gmail.com
+
+# LICENSE
+
+Same as Elixir, which is Apache License v2.0. Please refer to [LICENSE](LICENSE) for details.

@@ -10,13 +10,15 @@ defmodule Tasks.ReadDoc do
   Documentation of your project can be extracted into files containing
   markers.
 
-  These markers are a marker to start insertion, which is of the form:
+  These markers are
 
       <!-- begin @doc <ElixirIdentifier> -->
 
-  and
+  to mark the start of an inserted docstriang and
 
       <!-- end @doc <ElixirIdentifier> -->
+
+  to mark the end thereof.
 
   Right now only `@moduledoc`  and `@doc` strings can be extracted, according to
   if `<ElixirIdentifier>` refers to a module or a function.
