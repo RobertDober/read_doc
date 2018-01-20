@@ -17,17 +17,23 @@ defmodule ReadDoc.Options do
 
       mix read_doc [options] files...
 
-  Each file is scanned for lines `<!-- begin @doc...` and `<!-- end @doc...` pairs and
-  the content between two matching lines is replaced with the corresponding docstring.
+  Each file is scanned for block of lines starting with `<!-- begin @doc...` and 
+  endifing with `<!-- end @doc...`.
+  Then the content between two matching lines is replaced with the corresponding docstring.
 
   The following options are implemented
 
       --silent     no messages emitted to :stderr (defaults to false)
       --keep-copy  a copy of the original input file is kept by appending `.bup<n>` where n runs from 1 to the
                    next available number for which no copy exists yet (defaults to false)
-      --fix-errors defaults to true! (deactivate via --no-fix-errors), the following errors are corrected in the
-                   input file:
-
+      --fix-errors defaults to true! (deactivate via --no-fix-errors), and closing `<!-- end @doc...` lines
+                   with no matching `<!-- begin @doc...` are removed from the input
+      --begin-trigger defaults to `"\\A \\s* <!-- \\s+ begin \\s @doc \\s ([\\w.?!]+) \\s+ --> \\s* \\z"`.
+                      This values is interpreted as an extended regex indicating the begin of a docstring block, where
+                      the first capture defines the module/function of the docstring
+      --end-trigger defaults to `"\\A \\s* <!-- \\s+ end \\s @doc \\s ([\\w.?!]+) \\s+ --> \\s* \\z"`.
+                      This values is interpreted as an extended regex indicating the end of a docstring block, where
+                      the first capture defines the module/function of the docstring
 
 
   """

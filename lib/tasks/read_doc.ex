@@ -2,6 +2,7 @@ defmodule Tasks.ReadDoc do
   alias ReadDoc.Options
 
   import ReadDoc.FileSaver, only: [maybe_backup_files: 1]
+  import ReadDoc.DocExtractor, only: [extract_doc: 1]
 
   @moduledoc """
   ## Abstract
@@ -51,17 +52,23 @@ defmodule Tasks.ReadDoc do
   """
   @spec run( list(String.t) ) :: :ok
   def run(args) do
-    parse_args(args)
-      |> make_options()
-      |> maybe_backup_files()
-      |> ReadDoc.rewrite_files()
+    case parse_args(args) |> make_options() do
+      {:ok, options_and_files} -> options_and_files
+        |> maybe_backup_files()
+        |> ReadDoc.rewrite_files()
+      _ -> :ok
+    end
   end
 
 
+  defp make_options({[help: true], _, _}) do
+    IO.puts :stderr, extract_doc("ReadDoc.Options")
+    {:exit, nil}
+  end
   defp make_options({options, files, []}) do
-    { options
+    {:ok, { options
         |> Enum.into(%Options{}),
-        files }
+        files }}
   end
   defp make_options({_, _, errors}) do
     raise ArgumentError, "undefined switches #{readable_options(errors, [])}"
@@ -76,7 +83,7 @@ defmodule Tasks.ReadDoc do
     OptionParser.parse(args, strict: switches(), aliases: aliases())
   end
 
-  defp switches, do: [keep_copy: :boolean, start_comment: :string, end_comment: :string, line_comment: :string]
-  defp aliases,  do: [k: :keep_copy]
+  defp switches, do: [keep_copy: :boolean, start_comment: :string, end_comment: :string, line_comment: :string, help: :boolean]
+  defp aliases,  do: [k: :keep_copy, h: :help]
 
 end
