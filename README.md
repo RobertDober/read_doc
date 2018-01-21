@@ -20,7 +20,8 @@ def deps do
 end
 ```
 
-<!-- begin @doc Tasks.ReadDoc -->
+<!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+<!-- begin @doc Mix.Tasks.ReadDoc -->
 ## Abstract
 
 Documentation of your project can be extracted into files containing
@@ -60,8 +61,10 @@ with the moduledoc string of `My.Module`.
 - Docstrings for types, macros and callbacks cannot be accessed yet.
 - Recursion is not supported, meaning that a docstring containing markers
   will not trigger the inclusion of the docstring indicated by these markers.
-<!-- end @doc Tasks.ReadDoc -->
+<!-- end @doc Mix.Tasks.ReadDoc -->
+<!---^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
 
+<!-- vvvvvvvvvvvvvvvvvvvvvvvvvv -->
 <!-- begin @doc ReadDoc.Options -->
 ## Usage:
 
@@ -85,6 +88,7 @@ The following options are implemented
                     This values is interpreted as an extended regex indicating the end of a docstring block, where
                     the first capture defines the module/function of the docstring
 <!-- end @doc ReadDoc.Options -->
+<!---^^^^^^^^^^^^^^^^^^^^^^^^ -->
 
 Docs at [https://hexdocs.pm/read_doc](https://hexdocs.pm/read_doc).
 
