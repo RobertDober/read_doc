@@ -7,7 +7,7 @@ defmodule ReadDoc.Mixfile do
   def project do
     [
       app: :read_doc,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.5",
       description: @description,
       start_permanent: Mix.env == :prod,
@@ -42,7 +42,7 @@ defmodule ReadDoc.Mixfile do
 
   defp package do
     [
-      files:       [ "lib", "mix.exs", "README.md", "LICENSE", "tasks" ],
+      files:       [ "lib", "mix.exs", "README.md", "LICENSE" ],
       maintainers: [
                      "Robert Dober <robert.dober@gmail.com>"
                    ],
