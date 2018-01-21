@@ -7,7 +7,7 @@ defmodule ReadDoc.Mixfile do
   def project do
     [
       app: :read_doc,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.5",
       description: @description,
       start_permanent: Mix.env == :prod,
@@ -22,9 +22,7 @@ defmodule ReadDoc.Mixfile do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [
-      extra_applications: [:logger]
-    ]
+    [applications: [:read_doc, :mix]]
   end
 
   # Run "mix help deps" to learn about dependencies.
@@ -32,7 +30,7 @@ defmodule ReadDoc.Mixfile do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
-      {:ex_doc, "~> 0.18"},
+      {:ex_doc, "~> 0.18", only: :dev},
       {:excoveralls, "~> 0.8.0", only: :test},
       {:dialyxir, "~> 0.5.1", only: :dev},
     ]

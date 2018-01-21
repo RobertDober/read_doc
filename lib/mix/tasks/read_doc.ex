@@ -1,4 +1,4 @@
-defmodule Tasks.ReadDoc do
+defmodule Mix.Tasks.ReadDoc do
   alias ReadDoc.Options
 
   import ReadDoc.FileSaver, only: [maybe_backup_files: 1]
@@ -54,6 +54,7 @@ defmodule Tasks.ReadDoc do
   """
   @spec run(list(String.t())) :: :ok
   def run(args) do
+    Mix.Task.run "compile", []
     case parse_args(args) |> make_options() do
       {:ok, options_and_files} ->
         options_and_files

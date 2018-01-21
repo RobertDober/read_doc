@@ -1,9 +1,9 @@
-defmodule Tasks.ReadDocTest do
+defmodule Mix.Tasks.ReadDocTest do
   use ExUnit.Case
 
   import ExUnit.CaptureIO
 
-  alias Tasks.ReadDoc, as: T
+  alias Mix.Tasks.ReadDoc, as: T
   
   test "with default args" do 
     assert capture_io( :stderr, fn->
